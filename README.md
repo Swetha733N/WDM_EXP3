@@ -36,6 +36,7 @@ for each wear category.</p>
 <p align="justify">
 8. Visulaize the sequence patterns using matplotlib.
 </p>
+
 ### Program:
 
 ```python
@@ -43,17 +44,25 @@ from collections import defaultdict
 from itertools import combinations
 # Function to generate candidate k-item sequences
 def generate_candidates(dataset, k):
-
-
-    /WRITE YOUR CODE HERE/
+    candidates=defaultdict(int)
+    for sequence in dataset:
+        for itemset in combinations(sequence, k):
+            candidates[itemset] += 1
+    return {item: support for item, support in candidates.items() if support >= min_support}
 
 
 #Function to perform GSP algorithm
 def gsp(dataset, min_support):
-
-
-  /WRITE YOUR CODE HERE/
-
+    frequent_pattern = defaultdict(int)
+    k = 1
+    sequence = dataset
+    while True:
+        candidates = generate_candidates(sequence, k)
+        if not candidates:
+            break
+        frequent_pattern.update(candidates)
+        k += 1
+    return frequent_pattern
 
 #Example dataset for each category
 top_wear_data = [
@@ -103,6 +112,10 @@ else:
 ```
 ### Output:
 
+![image](https://github.com/user-attachments/assets/ac3fe980-d925-4d5c-9e1c-76d1518ab835)
+
+<br>
+
 ### Visualization:
 ```python
 import matplotlib.pyplot as plt
@@ -129,7 +142,39 @@ visualize_patterns_line(top_wear_result, 'Top Wear')
 visualize_patterns_line(bottom_wear_result, 'Bottom Wear')
 visualize_patterns_line(party_wear_result, 'Party Wear')
 ```
+
+```
+import pandas as pd
+
+# Function to display frequent sequential patterns in a table format
+def display_patterns_table(result, category):
+    if result:
+        patterns = list(result.keys())
+        support = list(result.values())
+
+        # Create a DataFrame
+        df = pd.DataFrame({'Patterns': patterns, 'Support Count': support})
+
+        print(f"\nFrequent Sequential Patterns - {category}")
+        print(df.to_markdown(index=False))
+    else:
+        print(f"No frequent sequential patterns found in {category}.")
+
+# Display frequent sequential patterns for each category in table format
+display_patterns_table(top_wear_result, 'Top Wear')
+display_patterns_table(bottom_wear_result, 'Bottom Wear')
+display_patterns_table(party_wear_result, 'Party Wear')
+```
+
 ### Output:
 
+![image](https://github.com/user-attachments/assets/29379964-55ed-4254-bc2e-184f986beaa1)
+
+<br>
+
+![image](https://github.com/user-attachments/assets/e63bce50-8ba2-417b-8bb4-66d460a5c6e9)
+
+<br>
 
 ### Result:
+Thus, GSP algorithm is implemented in python successfully.
